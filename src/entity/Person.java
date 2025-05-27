@@ -26,11 +26,22 @@ public class Person {
     }
 
     @ValidateMethod
-    public void love(Person person2) throws IllegalAccessException {
-        List<String> errors = Validator.validate(person2);
-        if(errors.isEmpty()){
-            System.out.println("Validate successfully.");
+    public void updatePersonInfo(
+            @NotNull @Length(min = 1, max = 10) String name,
+            @NotNull @Email String email,
+            @Range(min = 1, max = 100) Integer age,
+            @Past LocalDate birthDate
+    ) throws IllegalAccessException {
+        List<String> errors = Validator.validateMethod(this, "updatePersonInfo", name, email, age, birthDate);
+        if (!errors.isEmpty()) {
+            System.out.println("Validate unsuccessfully.");
+            errors.forEach(System.out::println);
+            return;
         }
-        else errors.forEach(System.out::println);
+        this.name = name;
+        this.email = email;
+        this.age = age;
+        this.birthDate = birthDate;
+        System.out.println("Person updated successfully!");
     }
 }
